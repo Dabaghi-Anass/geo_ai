@@ -1,7 +1,7 @@
 import os
 import requests
 
-MODEL_URL    = "https://drive.google.com/uc?export=view&id=1oZB-6mNWy4Qwj7DjwAh4v4uctFme7LOO"
+MODEL_URL    = "https://drive.usercontent.google.com/download?id=1oZB-6mNWy4Qwj7DjwAh4v4uctFme7LOO&export=download&authuser=0&confirm=t&uuid=8968c8fd-ef25-42c8-ac7e-d06ab155ff31&at=AKSUxGN_DM9mBo-f6VYagPIGHG2Z:1759533344042"
 MODEL_PATH   = "best_model.rar"
 EXTRACT_DIR  = "best_model"
 
