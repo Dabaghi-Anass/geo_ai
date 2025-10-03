@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="favicon.png" />
+    <title>Satellite Image Captioning</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: Helvetica, sans-serif;
+        margin: 0;
+        /* Space-themed background with star pattern */
+        background: #0a0e27;
+        background-image: radial-gradient(
+            2px 2px at 20% 30%,
+            white,
+            transparent
+          ),
+          radial-gradient(2px 2px at 60% 70%, white, transparent),
+          radial-gradient(1px 1px at 50% 50%, white, transparent),
+          radial-gradient(1px 1px at 80% 10%, white, transparent),
+          radial-gradient(2px 2px at 90% 60%, white, transparent),
+          radial-gradient(1px 1px at 33% 80%, white, transparent),
+          radial-gradient(1px 1px at 15% 90%, white, transparent);
+        background-size: 200% 200%;
+        background-position: 0% 0%, 40% 60%, 130% 270%, 70% 100%, 200% 50%,
+          100% 180%, 50% 220%;
+        color: #e0e6ff;
+      }
+
+      .header-container {
+        /* Deep space gradient with cosmic colors */
+        background: linear-gradient(
+          135deg,
+          #1a1f3a 0%,
+          #2d1b4e 50%,
+          #0f1729 100%
+        );
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        padding: 1rem 2rem;
+      }
+      .header {
+        font-size: 2rem;
+        font-weight: bold;
+        text-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 1rem;
+      }
+
+      .card {
+        /* Dark card with subtle glow */
+        background: rgba(15, 23, 42, 0.9);
+        border-radius: 1rem;
+        box-shadow: 0 8px 32px rgba(99, 102, 241, 0.2);
+        border: 1px solid rgba(139, 92, 246, 0.3);
+        padding: 1.5rem;
+        text-align: center;
+      }
+
+      .upload-label {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 2rem;
+        /* Cyan/purple dashed border for space theme */
+        border: 2px dashed #8b5cf6;
+        border-radius: 1rem;
+        background: rgba(30, 41, 59, 0.5);
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .upload-label:hover {
+        background: rgba(30, 41, 59, 0.8);
+        border-color: #06b6d4;
+        box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+      }
+      .upload-icon {
+        width: 3rem;
+        height: 3rem;
+        /* Cyan color for icon */
+        color: #06b6d4;
+      }
+
+      .image-preview {
+        display: block;
+        /* Smaller max-width for image */
+        max-width: 400px;
+        border-radius: 1rem;
+        margin: 1rem auto 0;
+        border: 2px solid rgba(139, 92, 246, 0.5);
+        box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+      }
+
+      .btn {
+        margin-top: 1rem;
+        /* Space-themed gradient button */
+        background: linear-gradient(
+          135deg,
+          #6366f1 0%,
+          #8b5cf6 50%,
+          #06b6d4 100%
+        );
+        border: none;
+        border-radius: 0.5rem;
+        padding: 0.8rem 2rem;
+        color: white;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: 0.3s;
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+      }
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+      }
+      .btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .caption-box {
+        margin-top: 1rem;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        /* Dark caption box with purple accent */
+        background: rgba(30, 41, 59, 0.8);
+        border: 1px solid #8b5cf6;
+        font-weight: 500;
+        color: #e0e6ff;
+      }
+
+      .spinner {
+        margin: 1rem auto;
+        border: 4px solid rgba(99, 102, 241, 0.2);
+        /* Cyan spinner color */
+        border-top: 4px solid #06b6d4;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        display: none;
+      }
+      @keyframes spin {
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header-container">
+      <h1 class="header">🛰️ Satellite Image Captioning</h1>
+    </div>
+
+    <main class="container">
+      <div class="card">
+        <label class="upload-label">
+          <svg
+            class="upload-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path
+              d="M21 15v4a2 2 0 0 1-2 2H5a2 
+            2 0 0 1-2-2v-4"
+            ></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+          <span>Select an Image</span>
+          <input type="file" id="image-upload" accept="image/*" hidden />
+        </label>
+        <img id="preview" class="image-preview" hidden />
+        <button id="submitBtn" class="btn" disabled>Generate Caption</button>
+        <div class="spinner" id="spinner"></div>
+        <div id="captionBox" class="caption-box" hidden></div>
+      </div>
+    </main>
+
+    <script>
+      const imageUpload = document.getElementById('image-upload');
+      const preview = document.getElementById('preview');
+      const submitBtn = document.getElementById('submitBtn');
+      const spinner = document.getElementById('spinner');
+      const captionBox = document.getElementById('captionBox');
+
+      let currentFile = null;
+
+      imageUpload.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        currentFile = file;
+        const imageUrl = URL.createObjectURL(file);
+        preview.src = imageUrl;
+        preview.hidden = false;
+        submitBtn.disabled = false;
+        captionBox.hidden = true;
+      });
+
+      submitBtn.addEventListener('click', async () => {
+        if (!currentFile) return;
+        spinner.style.display = 'block';
+        submitBtn.disabled = true;
+        captionBox.hidden = true;
+
+        const formData = new FormData();
+        formData.append('file', currentFile);
+        try {
+          const response = await fetch('/generate-caption', {
+            method: 'POST',
+            body: formData,
+          });
+          const data = await response.json();
+          captionBox.innerText = data.corrected;
+          captionBox.hidden = false;
+        } catch (error) {
+          captionBox.innerText = 'Error generating caption. Please try again.';
+          captionBox.hidden = false;
+        } finally {
+          spinner.style.display = 'none';
+          submitBtn.disabled = false;
+        }
+      });
+    </script>
+  </body>
+</html>

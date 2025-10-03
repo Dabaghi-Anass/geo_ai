@@ -2,7 +2,9 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+best_model/
+best_model.rar
+satellite-caption-model-55e.zip
 # C extensions
 *.so
 RSICD_images.rar
